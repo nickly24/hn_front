@@ -1,5 +1,5 @@
 // Конфигурация URL для бэкенда
-export const back_url = 'http://81.200.148.71/:80';
+export const back_url = 'http://81.200.148.71:80';
 
 // Можно добавить дополнительные URL если понадобятся
 export const api_endpoints = {
