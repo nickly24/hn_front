@@ -6,6 +6,8 @@ import ChatArea from './components/ChatArea';
 import LoginForm from './components/LoginForm';
 import KanbanBoard from './components/KanbanBoard';
 import ModelSelectorModal from './components/ModelSelectorModal';
+import { back_url } from './Links';
+import ConnectionTest from './components/ConnectionTest';
 // Временно закомментировано для переработки
 // import HowToUse from './components/HowToUse';
 // import Help from './components/Help';
@@ -55,7 +57,7 @@ function App() {
 
   const loadModels = async (userId) => {
     try {
-      const response = await fetch(`/api/models?user_id=${userId}`);
+      const response = await fetch(`${back_url}/api/models?user_id=${userId}`);
       const data = await response.json();
       
       if (data.models) {
@@ -69,7 +71,7 @@ function App() {
 
   const loadChats = async (userId) => {
     try {
-      const response = await fetch(`/api/chats?user_id=${userId}`);
+      const response = await fetch(`${back_url}/api/chats?user_id=${userId}`);
       const data = await response.json();
       
       // Просто загружаем чаты без всяких проверок
@@ -110,7 +112,7 @@ function App() {
     try {
       console.log('🆕 Создаем новый чат с моделью ID:', modelId);
       
-      const response = await fetch('/api/chats', {
+      const response = await fetch(`${back_url}/api/chats`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -142,7 +144,7 @@ function App() {
   const deleteChat = async (chatId) => {
     try {
       console.log(`🗑️ Удаляем чат ID: ${chatId}`);
-      const response = await fetch(`/api/chats/${chatId}`, {
+      const response = await fetch(`${back_url}/api/chats/${chatId}`, {
         method: 'DELETE',
       });
       
@@ -223,6 +225,9 @@ function App() {
       )}
       {currentPage === 'kanban' && (
         <KanbanBoard user={user} />
+      )}
+      {currentPage === 'test' && (
+        <ConnectionTest />
       )}
       {/* Временно закомментировано для переработки
       {currentPage === 'how-to-use' && (

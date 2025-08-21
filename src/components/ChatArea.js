@@ -3,6 +3,7 @@ import { Send, Zap, Sparkles } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import './ChatArea.css';
+import { back_url } from '../Links';
 
 function ChatArea({ user, currentChat, setCurrentChat, onChatUpdate, onNewChat, updateChat, models }) {
   const [messages, setMessages] = useState([]);
@@ -40,7 +41,7 @@ function ChatArea({ user, currentChat, setCurrentChat, onChatUpdate, onNewChat, 
     
     try {
       console.log('📥 Загружаем сообщения для чата ID:', currentChat.id);
-      const response = await fetch(`/api/chats/${currentChat.id}/messages`);
+      const response = await fetch(`${back_url}/api/chats/${currentChat.id}/messages`);
       const data = await response.json();
       console.log('📨 Получены сообщения с сервера:', data.messages);
       setMessages(data.messages);
@@ -92,7 +93,7 @@ function ChatArea({ user, currentChat, setCurrentChat, onChatUpdate, onNewChat, 
     });
 
     try {
-      const response = await fetch('/api/chat', {
+      const response = await fetch(`${back_url}/api/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -137,7 +138,7 @@ function ChatArea({ user, currentChat, setCurrentChat, onChatUpdate, onNewChat, 
               if (currentChat.title === 'Новый чат') {
                 console.log('📝 Обновляем заголовок чата на:', userMessageContent);
                 try {
-                  const response = await fetch(`/api/chats/${currentChat.id}`, {
+                  const response = await fetch(`${back_url}/api/chats/${currentChat.id}`, {
                     method: 'PATCH',
                     headers: {
                       'Content-Type': 'application/json',

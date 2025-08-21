@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './LoginForm.css';
+import { back_url } from '../Links';
 
 function LoginForm({ onLogin }) {
   const [login, setLogin] = useState('');
@@ -13,7 +14,7 @@ function LoginForm({ onLogin }) {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/auth', {
+      const response = await fetch(`${back_url}/api/auth`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

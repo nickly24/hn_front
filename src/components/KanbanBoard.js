@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, AlertCircle } from 'lucide-react';
 import './KanbanBoard.css';
+import { back_url } from '../Links';
 
 function KanbanBoard({ user }) {
+  console.log(`🚀 KanbanBoard инициализирован`);
+  console.log(`🌐 back_url: ${back_url}`);
+  console.log(`👤 Пользователь:`, user);
+  
   const [activeBoard, setActiveBoard] = useState('web_canban');
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -30,21 +35,30 @@ function KanbanBoard({ user }) {
 
 
   useEffect(() => {
+    console.log(`🔄 Смена активной доски на: ${activeBoard}`);
     loadTasks();
   }, [activeBoard]);
 
   const loadTasks = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/${activeBoard}`);
+      console.log(`🔄 Загружаем задачи для доски: ${activeBoard}`);
+      console.log(`🌐 URL запроса: ${back_url}/api/${activeBoard}`);
+      
+      const response = await fetch(`${back_url}/api/${activeBoard}`);
+      console.log(`📡 Ответ сервера:`, response);
+      
       if (response.ok) {
         const data = await response.json();
+        console.log(`✅ Получены данные:`, data);
         setTasks(data);
       } else {
-        console.error('Ошибка загрузки задач');
+        console.error(`❌ Ошибка HTTP: ${response.status} ${response.statusText}`);
+        const errorText = await response.text();
+        console.error(`📄 Текст ошибки:`, errorText);
       }
     } catch (error) {
-      console.error('Ошибка:', error);
+      console.error('❌ Ошибка сети:', error);
     } finally {
       setLoading(false);
     }
@@ -52,7 +66,11 @@ function KanbanBoard({ user }) {
 
   const handleAddTask = async () => {
     try {
-      const response = await fetch(`/api/${activeBoard}`, {
+      console.log(`➕ Добавляем задачу на доску: ${activeBoard}`);
+      console.log(`📝 Данные задачи:`, newTask);
+      console.log(`🌐 URL запроса: ${back_url}/api/${activeBoard}`);
+      
+      const response = await fetch(`${back_url}/api/${activeBoard}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -60,7 +78,10 @@ function KanbanBoard({ user }) {
         body: JSON.stringify(newTask),
       });
 
+      console.log(`📡 Ответ сервера:`, response);
+      
       if (response.ok) {
+        console.log(`✅ Задача успешно добавлена`);
         setShowAddModal(false);
         setNewTask({
           task: '',
@@ -69,16 +90,18 @@ function KanbanBoard({ user }) {
         });
         loadTasks();
       } else {
-        console.error('Ошибка добавления задачи');
+        console.error(`❌ Ошибка HTTP: ${response.status} ${response.statusText}`);
+        const errorText = await response.text();
+        console.error(`📄 Текст ошибки:`, errorText);
       }
     } catch (error) {
-      console.error('Ошибка:', error);
+      console.error('❌ Ошибка сети:', error);
     }
   };
 
   const handleUpdateTask = async (taskId, updatedData) => {
     try {
-      const response = await fetch(`/api/${activeBoard}/${taskId}`, {
+      const response = await fetch(`${back_url}/api/${activeBoard}/${taskId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -100,7 +123,7 @@ function KanbanBoard({ user }) {
   const handleDeleteTask = async (taskId) => {
     if (window.confirm('Вы уверены, что хотите удалить эту задачу?')) {
       try {
-        const response = await fetch(`/api/${activeBoard}/${taskId}`, {
+        const response = await fetch(`${back_url}/api/${activeBoard}/${taskId}`, {
           method: 'DELETE',
         });
 

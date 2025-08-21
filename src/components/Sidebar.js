@@ -93,6 +93,8 @@ function Sidebar({ user, chats, currentChat, currentPage, onChatSelect, onNewCha
           </div>
         )}
         
+        
+        
         <div className="nav-item">
           <Bot className="nav-icon" />
           <span>Модели</span>
